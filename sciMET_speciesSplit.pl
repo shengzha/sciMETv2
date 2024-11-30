@@ -44,18 +44,18 @@ while ($tag = <IN>) {
 		$assigned1++;
 		if ($CELLID_species{$cellID} =~ /human/) {
 			$human1++;
-			print H "$tag\t$read\n\+\n$qual\n";
+			print H "$tag\n$read\n\+\n$qual\n";
 		} elsif ($CELLID_species{$cellID} =~ /mouse/) {
 			$mouse1++;
-			print M "$tag\t$read\n\+\n$qual\n";
+			print M "$tag\n$read\n\+\n$qual\n";
 		} elsif ($CELLID_species{$cellID} =~ /mixed/) {
 			$mixed1++;
-			print X "$tag\t$read\n\+\n$qual\n";
+			print X "$tag\n$read\n\+\n$qual\n";
 		} else {
-			print U "$tag\t$read\n\+\n$qual\n";
+			print U "$tag\n$read\n\+\n$qual\n";
 		}
 	} else {
-		print U "$tag\t$read\n\+\n$qual\n";
+		print U "$tag\n$read\n\+\n$qual\n";
 	}
 } close IN;
 close H; close M; close X; close U;
@@ -70,14 +70,14 @@ open U, "| gzip > $opt{'O'}.unassigned.R2.fq.gz";
 
 open IN, "zcat $opt{'2'} |";
 while ($tag = <IN>) {
-	$total1++;
+	$total2++;
 	chomp $tag;
 	$cellID = $tag; $cellID =~ s/:.+$//; $cellID =~ s/^\@//;
 	$read = <IN>; chomp $read;
 	$null = <IN>;
 	$qual = <IN>; chomp $qual;
 	if (defined $CELLID_species{$cellID}) {
-		$assigned1++;
+		$assigned2++;
 		if ($CELLID_species{$cellID} =~ /human/) {
 			$human2++;
 			print H "$tag\n$read\n\+\n$qual\n";
