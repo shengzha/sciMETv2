@@ -2,7 +2,7 @@
 
 use Getopt::Std; %opt = ();
 
-getopts("O:B:1:2:", \%opt);
+getopts("O:B:1:2:p", \%opt);
 
 $die = "
 
@@ -19,6 +19,11 @@ if (!defined $opt{'O'} ||
 		die $die;
 }
 
+$zcat="zcat";
+$gzip="gzip";
+if (defined $opt{'p'}) {$zcat="pigz -dc"; $gzip="pigz";}
+
+
 open IN, "$opt{'B'}";
 while ($l = <IN>) {
 	chomp $l;
@@ -27,12 +32,12 @@ while ($l = <IN>) {
 } close IN;
 
 $assigned1 = 0; $total1 = 0;
-open H, "| gzip > $opt{'O'}.human.R1.fq.gz"; $human1 = 0;
-open M, "| gzip > $opt{'O'}.mouse.R1.fq.gz"; $mouse1 = 0;
-open X, "| gzip > $opt{'O'}.mixed.R1.fq.gz"; $mixed1 = 0;
-open U, "| gzip > $opt{'O'}.unassigned.R1.fq.gz";
+open H, "| $gzip > $opt{'O'}.human.R1.fq.gz"; $human1 = 0;
+open M, "| $gzip > $opt{'O'}.mouse.R1.fq.gz"; $mouse1 = 0;
+open X, "| $gzip > $opt{'O'}.mixed.R1.fq.gz"; $mixed1 = 0;
+open U, "| $gzip > $opt{'O'}.unassigned.R1.fq.gz";
 
-open IN, "zcat $opt{'1'} |";
+open IN, "$zcat $opt{'1'} |";
 while ($tag = <IN>) {
 	$total1++;
 	chomp $tag;
@@ -63,12 +68,12 @@ close H; close M; close X; close U;
 if ($assigned1 < 1) {die "ERROR: ZERO reads were assigned for read 1! Check input files\n"};
 
 $assigned2 = 0; $total2 = 0;
-open H, "| gzip > $opt{'O'}.human.R2.fq.gz"; $human2 = 0;
-open M, "| gzip > $opt{'O'}.mouse.R2.fq.gz"; $mouse2 = 0;
-open X, "| gzip > $opt{'O'}.mixed.R2.fq.gz"; $mixed2 = 0;
-open U, "| gzip > $opt{'O'}.unassigned.R2.fq.gz";
+open H, "| $gzip > $opt{'O'}.human.R2.fq.gz"; $human2 = 0;
+open M, "| $gzip > $opt{'O'}.mouse.R2.fq.gz"; $mouse2 = 0;
+open X, "| $gzip > $opt{'O'}.mixed.R2.fq.gz"; $mixed2 = 0;
+open U, "| $gzip > $opt{'O'}.unassigned.R2.fq.gz";
 
-open IN, "zcat $opt{'2'} |";
+open IN, "$zcat $opt{'2'} |";
 while ($tag = <IN>) {
 	$total2++;
 	chomp $tag;
