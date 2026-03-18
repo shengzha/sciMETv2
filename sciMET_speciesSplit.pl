@@ -21,6 +21,7 @@ if (!defined $opt{'O'} ||
 
 $zcat="zcat";
 $gzip="gzip";
+$pigz="pigz";
 if (defined $opt{'t'}) {
 	$zcat = "$pigz -dc -p $opt{'t'}";
 	$gzip = "$pigz -p $opt{'t'}";
