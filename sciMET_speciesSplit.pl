@@ -2,11 +2,11 @@
 
 use Getopt::Std; %opt = ();
 
-getopts("O:B:1:2:p", \%opt);
+getopts("O:B:1:2:t:", \%opt);
 
 $die = "
 
-sciMET_speciesSplit.pl -B [barnyard_compare cell stats file] -1 [trimmed read 1] -2 [trimmed read 2] -O [out prefix]
+sciMET_speciesSplit.pl -t [threads for pigz] -B [barnyard_compare cell stats file] -1 [trimmed read 1] -2 [trimmed read 2] -O [out prefix]
 
 All options required - will split fastq files by species.
 
@@ -21,7 +21,10 @@ if (!defined $opt{'O'} ||
 
 $zcat="zcat";
 $gzip="gzip";
-if (defined $opt{'p'}) {$zcat="pigz -dc"; $gzip="pigz";}
+if (defined $opt{'t'}) {
+	$zcat = "$pigz -dc -p $opt{'t'}";
+	$gzip = "$pigz -p $opt{'t'}";
+}
 
 
 open IN, "$opt{'B'}";
